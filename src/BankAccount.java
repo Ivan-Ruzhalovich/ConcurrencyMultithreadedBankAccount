@@ -3,7 +3,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Logger;
 
-public class BankAccount {
+public class BankAccount implements Comparable<BankAccount>{
     private volatile int balance;
     private final UUID uuid;
 
@@ -28,5 +28,10 @@ public class BankAccount {
         if (this.balance >= volume) {
             this.balance -= volume;
         } else throw new NoMoneyException("На счете недостаточно денег!");
+    }
+
+    @Override
+    public int compareTo(BankAccount o) {
+        return this.uuid.compareTo(o.uuid);
     }
 }

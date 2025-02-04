@@ -9,10 +9,13 @@ public class Main {
         Thread transferThread1 = new Thread(() -> bank.transfer(account1,account2,200));
         Thread transferThread2 = new Thread(() -> bank.transfer(account2,account1,100));
         ExecutorService executorService = Executors.newFixedThreadPool(1000);
-//        transferThread1.start();
-//        transferThread2.start();
+        transferThread1.start();
+        transferThread2.start();
         for (int i = 0; i < 1000; i++) {
             executorService.submit(() -> bank.transfer(account1,account2,20));
+        }
+        for (int i = 0; i < 1000; i++) {
+            executorService.submit(() -> bank.transfer(account2,account1,20));
         }
         executorService.shutdown();
         try {
@@ -21,8 +24,6 @@ public class Main {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-        System.out.println(account1.getBalance());
-        System.out.println(account2.getBalance());
         System.out.println("Total balance: " + bank.getTotalBalance());
     }
 }
