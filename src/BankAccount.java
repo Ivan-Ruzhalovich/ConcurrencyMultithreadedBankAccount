@@ -4,7 +4,7 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Logger;
 
 public class BankAccount {
-    private int balance;
+    private volatile int balance;
     private final UUID uuid;
 
     public BankAccount(int balance) {

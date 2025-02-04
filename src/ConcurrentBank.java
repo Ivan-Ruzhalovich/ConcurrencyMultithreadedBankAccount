@@ -8,6 +8,7 @@ public class ConcurrentBank {
     private final List<BankAccount> bankAccounts = new ArrayList<>();
     private final Logger log = Logger.getLogger(ConcurrentBank.class.getName());
     private final Lock concurrentBankLock = new ReentrantLock();
+
     public ConcurrentBank() {
     }
 
@@ -18,17 +19,16 @@ public class ConcurrentBank {
     }
 
     public void transfer(BankAccount account1, BankAccount account2, int volume) {
-        concurrentBankLock.lock();
-        try{
-        account1.withdraw(volume);
-        account2.deposit(volume);}
-        catch (NoMoneyException nme){
+        try {
+            synchronized (account1) {
+                synchronized (account2) {
+                    account1.withdraw(volume);
+                    account2.deposit(volume);
+                }
+            }
+        } catch (NoMoneyException nme) {
             log.info(nme.getMessage());
         }
-        finally {
-            concurrentBankLock.unlock();
-        }
-
     }
 
     public int getTotalBalance() {
